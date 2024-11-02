@@ -1,0 +1,17 @@
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.gallery-item {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+  width: 200px; /* Atur lebar sesuai kebutuhan */
+}
+
+.gallery-item img {
+  max-width: 100%;
+  height: auto;
+}

@@ -1,0 +1,22 @@
+import React from 'react';
+import './skills.css';
+
+// Definisikan tipe data array untuk skill
+const skills: string[] = ['Accounting', 'Microsoft Office', 'Keterampilan Beradaptasi atau Belajar', 'HTML & CSS', 'Problem Solving'];
+
+const MySkills: React.FC = () => {
+  return (
+    <section id="my-skills">
+    <div className="container mx-auto p-2 text-center pt-10">
+    <h2 className="text-xl font-bold mb-4 text-center text-black-600">My Skills</h2>
+      <ul>
+        {skills.map((skill, index) => (
+          <li  key={index}>{skill}</li>
+        ))}
+      </ul>
+      </div>
+    </section>
+  );
+};
+
+export default MySkills;
