@@ -1,4 +1,4 @@
-"use client";
+"use client"; // Menandai komponen ini sebagai Client Component
 
 import React, { useState, useEffect } from 'react';
 
@@ -15,18 +15,19 @@ const ContactForm: React.FC = () => {
     rating: 0
   });
   
-  const [comments, setComments] = useState<Comment[]>([]);
+  const [comments, setComments] = useState<Comment[]>([]); // State untuk daftar komentar
   const [submitted, setSubmitted] = useState(false);
-  const [hoverRating, setHoverRating] = useState<number | null>(null);
+  const [hoverRating, setHoverRating] = useState<number | null>(null); // State untuk efek hover pada bintang
 
-  // Mendapatkan komentar dari backend saat halaman dimuat
+  // Mengambil komentar dari local storage saat pertama kali halaman dimuat
   useEffect(() => {
-    axios.get('http://localhost:5000/comments')
-      .then(response => setComments(response.data))
-      .catch(error => console.error("Error fetching comments:", error));
+    const storedComments = localStorage.getItem('comments');
+    if (storedComments) {
+      setComments(JSON.parse(storedComments));
+    }
   }, []);
 
-  // Menangani perubahan input
+  // Function to handle input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData({
@@ -35,7 +36,7 @@ const ContactForm: React.FC = () => {
     });
   };
 
-  // Menangani perubahan rating
+  // Function to handle rating change
   const handleRatingChange = (rating: number) => {
     setFormData({
       ...formData,
@@ -43,36 +44,37 @@ const ContactForm: React.FC = () => {
     });
   };
 
-  // Mengirim komentar ke backend
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  // Function to handle form submission
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
-    try {
-      const response = await axios.post('http://localhost:5000/comments', formData);
-      setComments([...comments, response.data]);
-      setSubmitted(true);
+    // Tambahkan komentar ke daftar
+    const updatedComments = [...comments, formData];
+    setComments(updatedComments);
+    setSubmitted(true);
 
-      setFormData({
-        name: '',
-        comment: '',
-        rating: 0
-      });
-    } catch (error) {
-      console.error("Error posting comment:", error);
-    }
+    // Simpan komentar ke local storage
+    localStorage.setItem('comments', JSON.stringify(updatedComments));
+
+    // Reset form
+    setFormData({
+      name: '',
+      comment: '',
+      rating: 0
+    });
   };
 
-  // Menghitung rata-rata rating
+  // Hitung rata-rata rating
   const averageRating = comments.length > 0
     ? comments.reduce((sum, comment) => sum + comment.rating, 0) / comments.length
     : 0;
 
   return (
-    <div style={{ maxWidth: '1400px', margin: '50px', padding: '20px', border: '1px solid #ddd', borderRadius: '8px' }}>
-      <h2 className="text-xl font-bold mb-4 text-center text-black-600">Berikan Komentar & Rating</h2>
+    <div style={{ maxWidth: '400px', margin: '0 auto', padding: '20px', border: '1px solid #ddd', borderRadius: '8px' }}>
+      <h2>Berikan Komentar & Rating</h2>
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: '15px' }}>
-          <label htmlFor="name">Nama :</label>
+          <label htmlFor="name">Nama:</label>
           <input
             type="text"
             id="name"
@@ -80,12 +82,12 @@ const ContactForm: React.FC = () => {
             value={formData.name}
             onChange={handleChange}
             required
-            style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd'}}
+            style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
           />
         </div>
         
         <div style={{ marginBottom: '15px' }}>
-          <label htmlFor="comment">Komentar :</label>
+          <label htmlFor="comment">Komentar:</label>
           <textarea
             id="comment"
             name="comment"
@@ -96,8 +98,9 @@ const ContactForm: React.FC = () => {
           ></textarea>
         </div>
 
+        {/* Rating Stars */}
         <div style={{ marginBottom: '15px' }}>
-          <label>Rating :</label>
+          <label>Rating:</label>
           <div>
             {[1, 2, 3, 4, 5].map((star) => (
               <span
@@ -127,6 +130,7 @@ const ContactForm: React.FC = () => {
         </div>
       )}
 
+      {/* Average Rating */}
       <div style={{ marginTop: '30px' }}>
         <h3>Rata-rata Rating:</h3>
         <p style={{ fontSize: '24px', color: '#ffc107' }}>
@@ -134,7 +138,8 @@ const ContactForm: React.FC = () => {
         </p>
       </div>
 
-      <div style={{ marginTop: '20px'}}>
+      {/* Daftar Komentar */}
+      <div style={{ marginTop: '20px' }}>
         <h3>Komentar yang Diterima:</h3>
         {comments.length === 0 ? (
           <p>Belum ada komentar.</p>
