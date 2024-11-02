@@ -70,7 +70,7 @@ const ContactForm: React.FC = () => {
     : 0;
 
   return (
-    <div style={{ maxWidth: '400px', margin: '0 auto', padding: '20px', border: '1px solid #ddd', borderRadius: '8px' }}>
+    <div style={{ maxWidth: '1400px', margin: '50px', padding: '20px', border: '1px solid #ddd', borderRadius: '8px' }}>
       <h2>Berikan Komentar & Rating</h2>
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: '15px' }}>
