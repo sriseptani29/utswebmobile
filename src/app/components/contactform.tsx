@@ -1,5 +1,3 @@
-// ContactForm.tsx
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -26,8 +24,8 @@ const ContactForm: React.FC = () => {
 
   const fetchComments = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/comments');
-      setComments(response.data);
+      const response = await axios.get<Comment[]>('http://localhost:5000/comments');  // Specify the expected type here
+      setComments(response.data);  // TypeScript will now recognize this as Comment[]
       calculateAverageRating(response.data);
     } catch (error) {
       console.error('Error fetching comments:', error);
@@ -81,7 +79,11 @@ const ContactForm: React.FC = () => {
           <h4>Rating</h4>
           <div className="rating">
             {[1, 2, 3, 4, 5].map((star) => (
-              <StarIcon key={star} selected={star <= rating} onClick={() => setRating(star)} />
+              <StarIcon
+                key={star}
+                selected={star <= rating}
+                onClick={() => setRating(star)}
+              />
             ))}
           </div>
           <button type="submit">Submit</button>
@@ -109,8 +111,16 @@ type StarIconProps = {
 };
 
 const StarIcon: React.FC<StarIconProps> = ({ selected, onClick }) => (
-  <span onClick={onClick} style={{ cursor: 'pointer' }}>
+  <span 
+    onClick={onClick} 
+    style={{ 
+      cursor: 'pointer', 
+      color: selected ? 'yellow' : 'gray'  // Menambahkan warna kuning jika terpilih, abu-abu jika tidak
+    }}
+  >
+    {selected ? '★' : '☆'}
   </span>
 );
+
 
 export default ContactForm;
