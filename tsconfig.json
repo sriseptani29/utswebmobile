@@ -5,9 +5,11 @@
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
+    "target": "ES6",
+    "module": "commonjs",
+    "moduleResolution": "node",
     "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
+    "outDir": "./dist",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
@@ -21,6 +23,7 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/components/server.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
 }
+

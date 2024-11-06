@@ -9,33 +9,23 @@ const hobbies = [
   { name: 'Watching', image: '/images/hobby4.jpg' },
 ];
 
-const MyGallery = () => {
+const  App = () => {
   return (
-    <section className="p-2 bg-gray-30 shadow-md rounded-xl">
-      <h2 className="text-2xl font-bold mb-4 text-center text-black-600">My Gallery</h2>
-      <div className="grid grid-cols-12 gap-1">
+    <section>
+      <h2 className="text-2xl font-bold mb-4 text-center text-black">My Gallery</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         {hobbies.map((hobby, index) => (
-          <div key={index} className="col-span-12 md:col-span-3 flex flex-col items-center">
+          <div key={index} className="flex flex-col items-center">
             <img 
               src={hobby.image} 
               alt={hobby.name} 
-              className="w-40 h-40 object-cover rounded-xl shadow" 
+              className="w-full h-40 object-cover rounded-xl" 
             />
-            <span className="mt-2 text-gray-800 text-center">{hobby.name}</span>
+            <span>{hobby.name}</span>
           </div>
         ))}
-      </div>
+        </div>
     </section>
-  );
-};
-
-const App = () => {
-  return (
-    <div className="flex items-center justify-center">
-        <div className="max-w-7xl w-full bg-white p-10 rounded-4xl shadow-lg">
-        <MyGallery />
-    </div>
-    </div>
   );
 };
 
