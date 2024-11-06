@@ -4,7 +4,6 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaStar } from 'react-icons/fa';
 import './contactform.css';
 
 type Comment = {
@@ -111,7 +110,6 @@ type StarIconProps = {
 
 const StarIcon: React.FC<StarIconProps> = ({ selected, onClick }) => (
   <span onClick={onClick} style={{ cursor: 'pointer' }}>
-    <FaStar color={selected ? '#ffc107' : '#e4e5e9'} />
   </span>
 );
 
