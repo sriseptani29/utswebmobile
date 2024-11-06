@@ -1,234 +1,219 @@
 {
-  "name": "react-icons",
-  "version": "5.3.0",
-  "description": "SVG React icons of popular icon packs using ES6 imports",
-  "author": "Goran Gajic",
-  "contributors": [
-    "kamijin_fanta <kamijin@live.jp>"
-  ],
-  "license": "MIT",
-  "main": "lib/index.js",
-  "module": "lib/index.mjs",
-  "types": "lib/index.d.ts",
-  "sideEffects": false,
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com:react-icons/react-icons.git"
-  },
-  "bugs": {
-    "url": "https://github.com/react-icons/react-icons/issues"
-  },
-  "homepage": "https://github.com/react-icons/react-icons#readme",
-  "peerDependencies": {
-    "react": "*"
-  },
+  "name": "axios",
+  "version": "1.7.7",
+  "description": "Promise based HTTP client for the browser and node.js",
+  "main": "index.js",
   "exports": {
     ".": {
-      "types": "./index.d.ts",
-      "require": "./index.js",
-      "import": "./index.mjs",
-      "default": "./index.mjs"
+      "types": {
+        "require": "./index.d.cts",
+        "default": "./index.d.ts"
+      },
+      "browser": {
+        "require": "./dist/browser/axios.cjs",
+        "default": "./index.js"
+      },
+      "default": {
+        "require": "./dist/node/axios.cjs",
+        "default": "./index.js"
+      }
     },
-    "./lib": {
-      "types": "./lib/index.d.ts",
-      "require": "./lib/index.js",
-      "import": "./lib/index.mjs",
-      "default": "./lib/index.mjs"
+    "./lib/adapters/http.js": "./lib/adapters/http.js",
+    "./lib/adapters/xhr.js": "./lib/adapters/xhr.js",
+    "./unsafe/*": "./lib/*",
+    "./unsafe/core/settle.js": "./lib/core/settle.js",
+    "./unsafe/core/buildFullPath.js": "./lib/core/buildFullPath.js",
+    "./unsafe/helpers/isAbsoluteURL.js": "./lib/helpers/isAbsoluteURL.js",
+    "./unsafe/helpers/buildURL.js": "./lib/helpers/buildURL.js",
+    "./unsafe/helpers/combineURLs.js": "./lib/helpers/combineURLs.js",
+    "./unsafe/adapters/http.js": "./lib/adapters/http.js",
+    "./unsafe/adapters/xhr.js": "./lib/adapters/xhr.js",
+    "./unsafe/utils.js": "./lib/utils.js",
+    "./package.json": "./package.json"
+  },
+  "type": "module",
+  "types": "index.d.ts",
+  "scripts": {
+    "test": "npm run test:eslint && npm run test:mocha && npm run test:karma && npm run test:dtslint && npm run test:exports",
+    "test:eslint": "node bin/ssl_hotfix.js eslint lib/**/*.js",
+    "test:dtslint": "dtslint --localTs node_modules/typescript/lib",
+    "test:mocha": "node bin/ssl_hotfix.js mocha test/unit/**/*.js --timeout 30000 --exit",
+    "test:exports": "node bin/ssl_hotfix.js mocha test/module/test.js --timeout 30000 --exit",
+    "test:karma": "node bin/ssl_hotfix.js cross-env LISTEN_ADDR=:: karma start karma.conf.cjs --single-run",
+    "test:karma:firefox": "node bin/ssl_hotfix.js cross-env LISTEN_ADDR=:: Browsers=Firefox karma start karma.conf.cjs --single-run",
+    "test:karma:server": "node bin/ssl_hotfix.js cross-env karma start karma.conf.cjs",
+    "test:build:version": "node ./bin/check-build-version.js",
+    "start": "node ./sandbox/server.js",
+    "preversion": "gulp version",
+    "version": "npm run build && git add dist && git add package.json",
+    "prepublishOnly": "npm run test:build:version",
+    "postpublish": "git push && git push --tags",
+    "build": "gulp clear && cross-env NODE_ENV=production rollup -c -m",
+    "examples": "node ./examples/server.js",
+    "coveralls": "cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "fix": "eslint --fix lib/**/*.js",
+    "prepare": "husky install && npm run prepare:hooks",
+    "prepare:hooks": "npx husky set .husky/commit-msg \"npx commitlint --edit $1\"",
+    "release:dry": "release-it --dry-run --no-npm",
+    "release:info": "release-it --release-version",
+    "release:beta:no-npm": "release-it --preRelease=beta --no-npm",
+    "release:beta": "release-it --preRelease=beta",
+    "release:no-npm": "release-it --no-npm",
+    "release:changelog:fix": "node ./bin/injectContributorsList.js && git add CHANGELOG.md",
+    "release": "release-it"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/axios/axios.git"
+  },
+  "keywords": [
+    "xhr",
+    "http",
+    "ajax",
+    "promise",
+    "node"
+  ],
+  "author": "Matt Zabriskie",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/axios/axios/issues"
+  },
+  "homepage": "https://axios-http.com",
+  "devDependencies": {
+    "@babel/core": "^7.23.9",
+    "@babel/preset-env": "^7.23.9",
+    "@commitlint/cli": "^17.8.1",
+    "@commitlint/config-conventional": "^17.8.1",
+    "@release-it/conventional-changelog": "^5.1.1",
+    "@rollup/plugin-babel": "^5.3.1",
+    "@rollup/plugin-commonjs": "^15.1.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-multi-entry": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^9.0.0",
+    "abortcontroller-polyfill": "^1.7.5",
+    "auto-changelog": "^2.4.0",
+    "body-parser": "^1.20.2",
+    "chalk": "^5.3.0",
+    "coveralls": "^3.1.1",
+    "cross-env": "^7.0.3",
+    "dev-null": "^0.1.1",
+    "dtslint": "^4.2.1",
+    "es6-promise": "^4.2.8",
+    "eslint": "^8.56.0",
+    "express": "^4.18.2",
+    "formdata-node": "^5.0.1",
+    "formidable": "^2.1.2",
+    "fs-extra": "^10.1.0",
+    "get-stream": "^3.0.0",
+    "gulp": "^4.0.2",
+    "gzip-size": "^7.0.0",
+    "handlebars": "^4.7.8",
+    "husky": "^8.0.3",
+    "istanbul-instrumenter-loader": "^3.0.1",
+    "jasmine-core": "^2.99.1",
+    "karma": "^6.3.17",
+    "karma-chrome-launcher": "^3.2.0",
+    "karma-firefox-launcher": "^2.1.2",
+    "karma-jasmine": "^1.1.2",
+    "karma-jasmine-ajax": "^0.1.13",
+    "karma-rollup-preprocessor": "^7.0.8",
+    "karma-safari-launcher": "^1.0.0",
+    "karma-sauce-launcher": "^4.3.6",
+    "karma-sinon": "^1.0.5",
+    "karma-sourcemap-loader": "^0.3.8",
+    "memoizee": "^0.4.15",
+    "minimist": "^1.2.8",
+    "mocha": "^10.3.0",
+    "multer": "^1.4.4",
+    "pretty-bytes": "^6.1.1",
+    "release-it": "^15.11.0",
+    "rollup": "^2.79.1",
+    "rollup-plugin-auto-external": "^2.0.0",
+    "rollup-plugin-bundle-size": "^1.0.3",
+    "rollup-plugin-terser": "^7.0.2",
+    "sinon": "^4.5.0",
+    "stream-throttle": "^0.1.3",
+    "string-replace-async": "^3.0.2",
+    "terser-webpack-plugin": "^4.2.3",
+    "typescript": "^4.9.5",
+    "@rollup/plugin-alias": "^5.1.0"
+  },
+  "browser": {
+    "./lib/adapters/http.js": "./lib/helpers/null.js",
+    "./lib/platform/node/index.js": "./lib/platform/browser/index.js",
+    "./lib/platform/node/classes/FormData.js": "./lib/helpers/null.js"
+  },
+  "jsdelivr": "dist/axios.min.js",
+  "unpkg": "dist/axios.min.js",
+  "typings": "./index.d.ts",
+  "dependencies": {
+    "follow-redirects": "^1.15.6",
+    "form-data": "^4.0.0",
+    "proxy-from-env": "^1.1.0"
+  },
+  "bundlesize": [
+    {
+      "path": "./dist/axios.min.js",
+      "threshold": "5kB"
+    }
+  ],
+  "contributors": [
+    "Matt Zabriskie (https://github.com/mzabriskie)",
+    "Nick Uraltsev (https://github.com/nickuraltsev)",
+    "Dmitriy Mozgovoy (https://github.com/DigitalBrainJS)",
+    "Jay (https://github.com/jasonsaayman)",
+    "Emily Morehouse (https://github.com/emilyemorehouse)",
+    "Rubén Norte (https://github.com/rubennorte)",
+    "Justin Beckwith (https://github.com/JustinBeckwith)",
+    "Martti Laine (https://github.com/codeclown)",
+    "Xianming Zhong (https://github.com/chinesedfan)",
+    "Rikki Gibson (https://github.com/RikkiGibson)",
+    "Remco Haszing (https://github.com/remcohaszing)",
+    "Yasu Flores (https://github.com/yasuf)",
+    "Ben Carp (https://github.com/carpben)"
+  ],
+  "sideEffects": false,
+  "release-it": {
+    "git": {
+      "commitMessage": "chore(release): v${version}",
+      "push": true,
+      "commit": true,
+      "tag": true,
+      "requireCommits": false,
+      "requireCleanWorkingDir": false
     },
-    "./ci": {
-      "types": "./ci/index.d.ts",
-      "require": "./ci/index.js",
-      "import": "./ci/index.mjs",
-      "default": "./ci/index.mjs"
+    "github": {
+      "release": true,
+      "draft": true
     },
-    "./fa": {
-      "types": "./fa/index.d.ts",
-      "require": "./fa/index.js",
-      "import": "./fa/index.mjs",
-      "default": "./fa/index.mjs"
+    "npm": {
+      "publish": false,
+      "ignoreVersion": false
     },
-    "./fa6": {
-      "types": "./fa6/index.d.ts",
-      "require": "./fa6/index.js",
-      "import": "./fa6/index.mjs",
-      "default": "./fa6/index.mjs"
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": "angular",
+        "infile": "CHANGELOG.md",
+        "header": "# Changelog"
+      }
     },
-    "./io": {
-      "types": "./io/index.d.ts",
-      "require": "./io/index.js",
-      "import": "./io/index.mjs",
-      "default": "./io/index.mjs"
-    },
-    "./io5": {
-      "types": "./io5/index.d.ts",
-      "require": "./io5/index.js",
-      "import": "./io5/index.mjs",
-      "default": "./io5/index.mjs"
-    },
-    "./md": {
-      "types": "./md/index.d.ts",
-      "require": "./md/index.js",
-      "import": "./md/index.mjs",
-      "default": "./md/index.mjs"
-    },
-    "./ti": {
-      "types": "./ti/index.d.ts",
-      "require": "./ti/index.js",
-      "import": "./ti/index.mjs",
-      "default": "./ti/index.mjs"
-    },
-    "./go": {
-      "types": "./go/index.d.ts",
-      "require": "./go/index.js",
-      "import": "./go/index.mjs",
-      "default": "./go/index.mjs"
-    },
-    "./fi": {
-      "types": "./fi/index.d.ts",
-      "require": "./fi/index.js",
-      "import": "./fi/index.mjs",
-      "default": "./fi/index.mjs"
-    },
-    "./lu": {
-      "types": "./lu/index.d.ts",
-      "require": "./lu/index.js",
-      "import": "./lu/index.mjs",
-      "default": "./lu/index.mjs"
-    },
-    "./gi": {
-      "types": "./gi/index.d.ts",
-      "require": "./gi/index.js",
-      "import": "./gi/index.mjs",
-      "default": "./gi/index.mjs"
-    },
-    "./wi": {
-      "types": "./wi/index.d.ts",
-      "require": "./wi/index.js",
-      "import": "./wi/index.mjs",
-      "default": "./wi/index.mjs"
-    },
-    "./di": {
-      "types": "./di/index.d.ts",
-      "require": "./di/index.js",
-      "import": "./di/index.mjs",
-      "default": "./di/index.mjs"
-    },
-    "./ai": {
-      "types": "./ai/index.d.ts",
-      "require": "./ai/index.js",
-      "import": "./ai/index.mjs",
-      "default": "./ai/index.mjs"
-    },
-    "./bs": {
-      "types": "./bs/index.d.ts",
-      "require": "./bs/index.js",
-      "import": "./bs/index.mjs",
-      "default": "./bs/index.mjs"
-    },
-    "./ri": {
-      "types": "./ri/index.d.ts",
-      "require": "./ri/index.js",
-      "import": "./ri/index.mjs",
-      "default": "./ri/index.mjs"
-    },
-    "./fc": {
-      "types": "./fc/index.d.ts",
-      "require": "./fc/index.js",
-      "import": "./fc/index.mjs",
-      "default": "./fc/index.mjs"
-    },
-    "./gr": {
-      "types": "./gr/index.d.ts",
-      "require": "./gr/index.js",
-      "import": "./gr/index.mjs",
-      "default": "./gr/index.mjs"
-    },
-    "./hi": {
-      "types": "./hi/index.d.ts",
-      "require": "./hi/index.js",
-      "import": "./hi/index.mjs",
-      "default": "./hi/index.mjs"
-    },
-    "./hi2": {
-      "types": "./hi2/index.d.ts",
-      "require": "./hi2/index.js",
-      "import": "./hi2/index.mjs",
-      "default": "./hi2/index.mjs"
-    },
-    "./si": {
-      "types": "./si/index.d.ts",
-      "require": "./si/index.js",
-      "import": "./si/index.mjs",
-      "default": "./si/index.mjs"
-    },
-    "./sl": {
-      "types": "./sl/index.d.ts",
-      "require": "./sl/index.js",
-      "import": "./sl/index.mjs",
-      "default": "./sl/index.mjs"
-    },
-    "./im": {
-      "types": "./im/index.d.ts",
-      "require": "./im/index.js",
-      "import": "./im/index.mjs",
-      "default": "./im/index.mjs"
-    },
-    "./bi": {
-      "types": "./bi/index.d.ts",
-      "require": "./bi/index.js",
-      "import": "./bi/index.mjs",
-      "default": "./bi/index.mjs"
-    },
-    "./cg": {
-      "types": "./cg/index.d.ts",
-      "require": "./cg/index.js",
-      "import": "./cg/index.mjs",
-      "default": "./cg/index.mjs"
-    },
-    "./vsc": {
-      "types": "./vsc/index.d.ts",
-      "require": "./vsc/index.js",
-      "import": "./vsc/index.mjs",
-      "default": "./vsc/index.mjs"
-    },
-    "./tb": {
-      "types": "./tb/index.d.ts",
-      "require": "./tb/index.js",
-      "import": "./tb/index.mjs",
-      "default": "./tb/index.mjs"
-    },
-    "./tfi": {
-      "types": "./tfi/index.d.ts",
-      "require": "./tfi/index.js",
-      "import": "./tfi/index.mjs",
-      "default": "./tfi/index.mjs"
-    },
-    "./rx": {
-      "types": "./rx/index.d.ts",
-      "require": "./rx/index.js",
-      "import": "./rx/index.mjs",
-      "default": "./rx/index.mjs"
-    },
-    "./pi": {
-      "types": "./pi/index.d.ts",
-      "require": "./pi/index.js",
-      "import": "./pi/index.mjs",
-      "default": "./pi/index.mjs"
-    },
-    "./lia": {
-      "types": "./lia/index.d.ts",
-      "require": "./lia/index.js",
-      "import": "./lia/index.mjs",
-      "default": "./lia/index.mjs"
+    "hooks": {
+      "before:init": "npm test",
+      "after:bump": "gulp version --bump ${version} && npm run build && npm run test:build:version && git add ./dist && git add ./package-lock.json",
+      "before:release": "npm run release:changelog:fix",
+      "after:release": "echo Successfully released ${name} v${version} to ${repo.repository}."
     }
   },
-  "dependencies": {
-    "axios": "^1.7.7",
-    "cors": "^2.8.5",
-    "express": "^4.21.1",
-    "mysql": "^2.18.1"
-  },
-  "devDependencies": {
-    "@types/axios": "^0.9.36"
+  "commitlint": {
+    "rules": {
+      "header-max-length": [
+        2,
+        "always",
+        130
+      ]
+    },
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   }
 }

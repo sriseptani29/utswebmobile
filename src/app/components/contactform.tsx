@@ -122,5 +122,4 @@ const StarIcon: React.FC<StarIconProps> = ({ selected, onClick }) => (
   </span>
 );
 
-
 export default ContactForm;
