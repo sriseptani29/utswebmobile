@@ -55,7 +55,7 @@ const ContactForm: React.FC = () => {
       console.error('Error submitting comment:', error);
     }
   };
-
+  
   return (
     <section className="contact">
       <div className="contact-form">
@@ -115,7 +115,8 @@ const StarIcon: React.FC<StarIconProps> = ({ selected, onClick }) => (
     onClick={onClick} 
     style={{ 
       cursor: 'pointer', 
-      color: selected ? 'yellow' : 'gray'  // Menambahkan warna kuning jika terpilih, abu-abu jika tidak
+      color: selected ? '#e6b800' : 'gray',  // Warna kuning tua jika terpilih, abu-abu jika tidak
+      fontSize: '24px'  // Ukuran bintang lebih besar
     }}
   >
     {selected ? '★' : '☆'}
