@@ -17,6 +17,8 @@ const ContactForm: React.FC = () => {
   const [rating, setRating] = useState(0);
   const [comments, setComments] = useState<Comment[]>([]);
   const [averageRating, setAverageRating] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string>('');
 
   // Fetch comments and calculate average rating on component mount
   useEffect(() => {
@@ -24,12 +26,17 @@ const ContactForm: React.FC = () => {
   }, []);
 
   const fetchComments = async () => {
+    setIsLoading(true);
+    setError('');
     try {
-      const response = await axios.get<Comment[]>('http://localhost:5000/api/comments');
+      const response = await axios.get<Comment[]>(`${process.env.REACT_APP_API_URL || '/api/comments'}`);
       setComments(response.data);
       calculateAverageRating(response.data);
     } catch (error) {
+      setError('Error fetching comments');
       console.error('Error fetching comments:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -47,7 +54,7 @@ const ContactForm: React.FC = () => {
     }
 
     try {
-      await axios.post('http://localhost:5000/api/comments', { name, comment, rating });
+      await axios.post(`${process.env.REACT_APP_API_URL || '/api/comments'}`, { name, comment, rating });
       fetchComments(); // Refresh comments after submission
       setName('');
       setComment('');
@@ -87,8 +94,11 @@ const ContactForm: React.FC = () => {
               />
             ))}
           </div>
-          <button type="submit">Submit</button>
+          <button type="submit" disabled={isLoading}>
+            {isLoading ? 'Submitting...' : 'Submit'}
+          </button>
         </form>
+        {error && <div className="error-message">{error}</div>}
         <h3>Average Rating: <span className="average-rating">{averageRating.toFixed(1)} ★</span></h3>
         <div className="comments-list">
           {comments.map((c) => (
@@ -116,8 +126,8 @@ const StarIcon: React.FC<StarIconProps> = ({ selected, onClick }) => (
     onClick={onClick} 
     style={{ 
       cursor: 'pointer', 
-      color: selected ? '#e6b800' : 'gray',  // Warna kuning tua jika terpilih, abu-abu jika tidak
-      fontSize: '24px'  // Ukuran bintang lebih besar
+      color: selected ? '#e6b800' : 'gray', 
+      fontSize: '24px' 
     }}
   >
     {selected ? '★' : '☆'}
