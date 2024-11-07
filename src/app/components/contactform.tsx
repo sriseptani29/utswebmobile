@@ -1,5 +1,8 @@
-"use client";
+// contactform.tsx
 
+"use client"; // Menandakan ini adalah Client Component
+
+// contactform.tsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './contactform.css';
@@ -29,7 +32,7 @@ const ContactForm: React.FC = () => {
     setIsLoading(true);
     setError('');
     try {
-      const response = await axios.get<Comment[]>(`${process.env.REACT_APP_API_URL || '/api/comments'}`);
+      const response = await axios.get<Comment[]>(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api/comments'}`);
       setComments(response.data);
       calculateAverageRating(response.data);
     } catch (error) {
@@ -54,7 +57,7 @@ const ContactForm: React.FC = () => {
     }
 
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL || '/api/comments'}`, { name, comment, rating });
+      await axios.post(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api/comments'}`, { name, comment, rating });
       fetchComments(); // Refresh comments after submission
       setName('');
       setComment('');
