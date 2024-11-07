@@ -12,7 +12,7 @@
 .contact-form h2 {
   text-align: center;
   margin-bottom: 20px;
-  color: var(--text-color, #333);
+  color: var(--text-color, #beb0b0);
 }
 
 .contact-form h4 {

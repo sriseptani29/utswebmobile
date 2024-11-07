@@ -14,9 +14,9 @@ function RowPekerjaan(props: any) {
 
 export default function RiwayatPekerjaan() {
   return (
-    <section className="riwayatpekerjaan bg-white dark:bg-gray-200 py-8">
+    <section className="riwayatpekerjaan bg-white dark:bg-gray-800 py-8">
       <div className="container mx-auto p-4 text-center pt-10">
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800 dark:text-gray-100">Riwayat Pekerjaan</h2>  
+        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800 dark:text-white">Riwayat Pekerjaan</h2>  
         <RowPekerjaan sebagai="Guru SMK" instansi="SMK Garuda" tahun="1999" />
         <RowPekerjaan sebagai="Staff IT" instansi="Dinas Sosial" tahun="2002" />
         <RowPekerjaan sebagai="Programmer" instansi="CV GMedia" tahun="2005" />

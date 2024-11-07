@@ -18,14 +18,15 @@ const ContactForm: React.FC = () => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [averageRating, setAverageRating] = useState<number>(0);
 
+  // Fetch comments and calculate average rating on component mount
   useEffect(() => {
     fetchComments();
   }, []);
 
   const fetchComments = async () => {
     try {
-      const response = await axios.get<Comment[]>('http://localhost:5000/comments');  // Specify the expected type here
-      setComments(response.data);  // TypeScript will now recognize this as Comment[]
+      const response = await axios.get<Comment[]>('http://localhost:5000/api/comments');
+      setComments(response.data);
       calculateAverageRating(response.data);
     } catch (error) {
       console.error('Error fetching comments:', error);
@@ -44,10 +45,10 @@ const ContactForm: React.FC = () => {
       alert('Please fill in all fields');
       return;
     }
-    
+
     try {
-      await axios.post('http://localhost:5000/comments', { name, comment, rating });
-      fetchComments();
+      await axios.post('http://localhost:5000/api/comments', { name, comment, rating });
+      fetchComments(); // Refresh comments after submission
       setName('');
       setComment('');
       setRating(0);
@@ -55,7 +56,7 @@ const ContactForm: React.FC = () => {
       console.error('Error submitting comment:', error);
     }
   };
-  
+
   return (
     <section className="contact">
       <div className="contact-form">
@@ -88,7 +89,7 @@ const ContactForm: React.FC = () => {
           </div>
           <button type="submit">Submit</button>
         </form>
-        <h3>Average Rating : <span className="average-rating">{averageRating.toFixed(1)} ★</span></h3>
+        <h3>Average Rating: <span className="average-rating">{averageRating.toFixed(1)} ★</span></h3>
         <div className="comments-list">
           {comments.map((c) => (
             <div key={c.id} className="comment">

@@ -1,75 +1,55 @@
 const express = require('express');
+const mysql = require('mysql2');
 const cors = require('cors');
-const mysql = require('mysql');
-const bodyParser = require('body-parser');
+require('dotenv').config();
 
 const app = express();
-const port = 5000;
-
-// Middleware
+app.use(express.json());
 app.use(cors());
-app.use(bodyParser.json());
 
-// Koneksi ke database MySQL
+// Konfigurasi koneksi MySQL
 const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'username',      // Ganti dengan username database Anda
-  password: 'password',   // Ganti dengan password database Anda
-  database: 'contact_form'    // Ganti dengan nama database Anda
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD || '',  // Menggunakan password kosong jika tidak ada password
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT || 3306 // Menggunakan port default jika tidak ada port di environment variable
 });
 
-// Cek koneksi
+
+// Koneksi ke database
 db.connect((err) => {
   if (err) {
-    console.error('Database connection failed: ' + err.stack);
+    console.error('Error connecting to database:', err);
     return;
   }
-  console.log('Connected to database.');
-});
-
-// Rute untuk root URL
-app.get('/', (req, res) => {
-    res.send('Welcome to the Comments API');
+  console.log('Connected to MySQL database');
 });
 
 // Endpoint untuk mendapatkan semua komentar
-app.get('/comments', (req, res) => {
-  const query = 'SELECT * FROM comments ORDER BY id DESC';
-  db.query(query, (err, results) => {
+app.get('/api/comments', (req, res) => {
+  db.query('SELECT * FROM comments', (err, results) => {
     if (err) {
-      console.error('Error fetching comments:', err);
-      return res.status(500).json(err);
+      return res.status(500).json({ error: err.message });
     }
     res.json(results);
   });
 });
 
-// Endpoint untuk menyimpan komentar
-app.post('/comments', (req, res) => {
+// Endpoint untuk menambahkan komentar
+app.post('/api/comments', (req, res) => {
   const { name, comment, rating } = req.body;
-
-  // Validasi data
-  if (!name || !comment || !rating) {
-    return res.status(400).json({ error: 'All fields are required' });
-  }
-
   const query = 'INSERT INTO comments (name, comment, rating) VALUES (?, ?, ?)';
-  
   db.query(query, [name, comment, rating], (err, results) => {
     if (err) {
-      console.error('Error inserting comment:', err);
-      return res.status(500).json(err);
+      return res.status(500).json({ error: err.message });
     }
-    res.status(201).json({ id: results.insertId, name, comment, rating });
+    res.status(201).json({ message: 'Comment added successfully!' });
   });
 });
 
-// Menangani rute yang tidak dikenal
-app.use((req, res) => {
-    res.status(404).send('Not Found');
-});
-
 // Menjalankan server
+const port = process.env.PORT || 5000;
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+  console.log(`Server running on port ${port}`);
 });
