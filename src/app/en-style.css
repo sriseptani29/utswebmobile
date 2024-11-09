@@ -1,0 +1,10 @@
+.fotoku{
+    border-radius: 50%;
+    max-height: 200px;
+    max-width: 200px;
+    margin: 15px auto;
+    display: block; 
+    object-fit: cover;   
+    border: solid 3px white;
+    box-shadow: 1px 1px 20px #8f511e;
+}

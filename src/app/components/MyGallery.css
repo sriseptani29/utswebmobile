@@ -1,0 +1,46 @@
+/* MyGallery.css */
+
+/* Transisi untuk perubahan warna */
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Gaya untuk mode gelap */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #121212; /* Warna latar belakang gelap */
+    color: #e0e0e0; /* Warna teks gelap */
+  }
+
+  .bg-gray-200 {
+    background-color: #2d3748; /* Warna latar belakang gelap */
+  }
+
+  .text-black {
+    color: #e0e0e0; /* Mengubah warna teks hitam menjadi putih di mode gelap */
+  }
+
+  .text-gray-800 {
+    color: #d1d5db; /* Mengubah warna teks abu-abu menjadi lebih terang */
+  }
+}
+
+/* Gaya untuk mode terang */
+@media (prefers-color-scheme: light) {
+  body {
+    background-color: #ffffff; /* Warna latar belakang terang */
+    color: #000000; /* Warna teks hitam */
+  }
+
+  .bg-gray-200 {
+    background-color: #e2e8f0; /* Warna latar belakang terang */
+  }
+
+  .text-black {
+    color: #000000; /* Menjaga teks hitam di mode terang */
+  }
+
+  .text-gray-800 {
+    color: #333333; /* Mengatur warna teks abu-abu untuk mode terang */
+  }
+}

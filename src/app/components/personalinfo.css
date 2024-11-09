@@ -1,0 +1,38 @@
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #f0f0f0; /* Warna latar untuk mode terang */
+  color: #333; /* Warna teks untuk mode terang */
+}
+
+#my-infos {
+  background-color: #ffffff; /* Latar belakang section */
+  border-radius: 12px; /* Sudut membulat */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Bayangan */
+}
+
+.container {
+  max-width: 1200px; /* Lebar maksimal untuk tampilan responsif */
+  padding: 20px; /* Padding dalam container */
+}
+
+h2 {
+  color: #4a4a4a; /* Warna judul */
+}
+
+/* Tema gelap */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #121212; /* Warna latar untuk mode gelap */
+    color: #e0e0e0; /* Warna teks untuk mode gelap */
+  }
+
+  #my-infos {
+    background-color: #1e1e1e; /* Latar belakang section untuk mode gelap */
+    border: 1px solid #444; /* Garis pemisah untuk mode gelap */
+  }
+
+  h2 {
+    color: #ffffff; /* Warna judul untuk mode gelap */
+  }
+}
