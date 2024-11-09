@@ -1,8 +1,5 @@
-// contactform.tsx
+'use client';
 
-"use client"; // Menandakan ini adalah Client Component
-
-// contactform.tsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './contactform.css';
@@ -32,11 +29,12 @@ const ContactForm: React.FC = () => {
     setIsLoading(true);
     setError('');
     try {
-      const response = await axios.get<Comment[]>(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api/comments'}`);
+      const response = await axios.get<Comment[]>('/api/comments');
       setComments(response.data);
       calculateAverageRating(response.data);
-    } catch (error) {
-      setError('Error fetching comments');
+    } catch (error: any) {
+      const errorMessage = error.response ? error.response.data.error : 'Error fetching comments';
+      setError(errorMessage);
       console.error('Error fetching comments:', error);
     } finally {
       setIsLoading(false);
@@ -57,12 +55,12 @@ const ContactForm: React.FC = () => {
     }
 
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api/comments'}`, { name, comment, rating });
+      await axios.post('/api/comments', { name, comment, rating });
       fetchComments(); // Refresh comments after submission
       setName('');
       setComment('');
       setRating(0);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error submitting comment:', error);
     }
   };

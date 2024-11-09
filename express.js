@@ -1,31 +1,20 @@
 const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
 const app = express();
-const PORT = 5000;
+app.use(express.json());
 
-app.use(cors());
-app.use(bodyParser.json());
-
-let comments = []; // Simulasi penyimpanan data
-
-app.get('/comments', (req, res) => {
+// Endpoint untuk mendapatkan data komentar
+app.get('/api/comments', async (req, res) => {
+  try {
+    const comments = await prisma.comment.findMany();
     res.json(comments);
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching comments' });
+  }
 });
 
-app.post('/comments', (req, res) => {
-    const { name, comment, rating } = req.body;
-    const newComment = {
-        id: comments.length + 1,
-        name,
-        comment,
-        rating,
-    };
-    comments.push(newComment);
-    res.status(201).json(newComment); // Mengembalikan komentar yang baru ditambahkan
-});
-
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+app.listen(5000, () => {
+  console.log('Server is running on http://localhost:5000');
 });

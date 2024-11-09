@@ -1,31 +1,34 @@
-const express = require('express');
-const cors = require('cors');
-const app = express();
-const PORT = process.env.PORT || 5000;
+// pages/api/comments.js
+import { PrismaClient } from '@prisma/client';
 
-// Middleware
-app.use(express.json());
-app.use(cors());
+const prisma = new PrismaClient();
 
-// In-memory storage for comments
-let comments = [
-  { id: 1, name: 'John Doe', comment: 'Great app!', rating: 5 },
-  { id: 2, name: 'Jane Doe', comment: 'Nice features', rating: 4 },
-];
+export default async function handler(req, res) {
+  if (req.method === 'GET') {
+    try {
+      const comments = await prisma.comment.findMany();
+      res.status(200).json(comments);
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+      res.status(500).json({ error: 'Error fetching comments' });
+    }
+  } else if (req.method === 'POST') {
+    try {
+      const { name, comment, rating } = req.body;
+      const newComment = await prisma.comment.create({
+        data: {
+          name,
+          comment,
+          rating,
+        },
+      });
+      res.status(201).json(newComment);
+    } catch (error) {
+      console.error('Error posting comment:', error);
+      res.status(500).json({ error: 'Error posting comment' });
+    }
+  } else {
+    res.status(405).json({ error: 'Method not allowed' });
+  }
+}
 
-// API endpoint to get comments
-app.get('/api/comments', (req, res) => {
-  res.json(comments);
-});
-
-// API endpoint to post a new comment
-app.post('/api/comments', (req, res) => {
-  const { name, comment, rating } = req.body;
-  const newComment = { id: comments.length + 1, name, comment, rating };
-  comments.push(newComment);
-  res.status(201).json(newComment);
-});
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
