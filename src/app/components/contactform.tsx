@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -17,18 +17,27 @@ const ContactForm: React.FC = () => {
   const [rating, setRating] = useState(0);
   const [comments, setComments] = useState<Comment[]>([]);
   const [averageRating, setAverageRating] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string>('');
 
+  // Fetch comments and calculate average rating on component mount
   useEffect(() => {
     fetchComments();
   }, []);
 
   const fetchComments = async () => {
+    setIsLoading(true);
+    setError('');
     try {
-      const response = await axios.get<Comment[]>('http://localhost:5000/comments');  // Specify the expected type here
-      setComments(response.data);  // TypeScript will now recognize this as Comment[]
+      const response = await axios.get<Comment[]>('/api/comments');
+      setComments(response.data);
       calculateAverageRating(response.data);
-    } catch (error) {
+    } catch (error: any) {
+      const errorMessage = error.response ? error.response.data.error : 'Error fetching comments';
+      setError(errorMessage);
       console.error('Error fetching comments:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -44,14 +53,14 @@ const ContactForm: React.FC = () => {
       alert('Please fill in all fields');
       return;
     }
-    
+
     try {
-      await axios.post('http://localhost:5000/comments', { name, comment, rating });
-      fetchComments();
+      await axios.post('/api/comments', { name, comment, rating });
+      fetchComments(); // Refresh comments after submission
       setName('');
       setComment('');
       setRating(0);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error submitting comment:', error);
     }
   };
@@ -86,9 +95,12 @@ const ContactForm: React.FC = () => {
               />
             ))}
           </div>
-          <button type="submit">Submit</button>
+          <button type="submit" disabled={isLoading}>
+            {isLoading ? 'Submitting...' : 'Submit'}
+          </button>
         </form>
-        <h3>Average Rating : <span className="average-rating">{averageRating.toFixed(1)} ★</span></h3>
+        {error && <div className="error-message">{error}</div>}
+        <h3>Average Rating: <span className="average-rating">{averageRating.toFixed(1)} ★</span></h3>
         <div className="comments-list">
           {comments.map((c) => (
             <div key={c.id} className="comment">
@@ -115,7 +127,8 @@ const StarIcon: React.FC<StarIconProps> = ({ selected, onClick }) => (
     onClick={onClick} 
     style={{ 
       cursor: 'pointer', 
-      color: selected ? 'yellow' : 'gray'  // Menambahkan warna kuning jika terpilih, abu-abu jika tidak
+      color: selected ? '#e6b800' : 'gray', 
+      fontSize: '24px' 
     }}
   >
     {selected ? '★' : '☆'}

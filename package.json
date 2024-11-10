@@ -1,10 +1,10 @@
 {
-  "engines": {
-    "node": "20.x"
-  },
+  "name": "lat1",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -14,11 +14,16 @@
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
     "express": "^4.21.1",
-    "next": "14.2.13",
+    "mysql2": "^3.11.3",
+    "next": "^14.2.17",
     "react": "^18",
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@types/axios": "^0.9.36",
+    "@types/body-parser": "^1.19.5",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
@@ -27,6 +32,7 @@
     "postcss": "^8",
     "prisma": "^5.22.0",
     "tailwindcss": "^3.4.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
   }
 }
